@@ -1,0 +1,28 @@
+<div class="game-container">
+  <canvas #gameCanvas width="500" height="500"></canvas>
+  <img
+    src="assets/blabbs.png"
+    alt="Blabbs"
+    class="blabbs"
+    [class.jump]="isJumping"
+  />
+</div>
+
+<div class="volume-debug">
+  <label
+    >🎙️ Volume actuel : {{ currentVolume * 100 | number : "1.1-1" }}%</label
+  >
+  <div class="volume-bar-container">
+    <div
+      class="volume-bar"
+      [style.width.%]="volumePercent"
+      [ngClass]="vocalLevel"
+    ></div>
+  </div>
+  <small *ngIf="vocalLevel !== 'silent'"
+    >Niveau détecté : {{ vocalLevel }}</small
+  >
+  <small *ngIf="vocalLevel === 'silent'" style="color: grey"
+    >❌ Aucun son détecté</small
+  >
+</div>

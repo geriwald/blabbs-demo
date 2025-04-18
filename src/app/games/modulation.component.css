@@ -1,0 +1,71 @@
+.game-container {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    background-color: #eef;
+    border: 2px solid #222;
+    overflow: hidden;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.blabbs {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    animation: float 2s ease-in-out infinite;
+    z-index: 1;
+}
+
+@keyframes float {
+    0% {
+        transform: translate(-50%, 0);
+    }
+
+    50% {
+        transform: translate(-50%, -10px);
+    }
+
+    100% {
+        transform: translate(-50%, 0);
+    }
+}
+
+.volume-debug {
+    margin-top: 1rem;
+    width: 300px;
+    font-family: sans-serif;
+}
+
+.volume-bar-container {
+    width: 100%;
+    height: 15px;
+    background-color: #333;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.volume-bar {
+    height: 100%;
+    transition: width 0.1s;
+    border-radius: 5px;
+}
+
+.volume-bar.whisper {
+    background-color: lightblue;
+}
+
+.volume-bar.normal {
+    background-color: orange;
+}
+
+.volume-bar.shout {
+    background-color: crimson;
+}
