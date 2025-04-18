@@ -1,7 +1,7 @@
 <div class="game-container">
   <canvas #gameCanvas width="500" height="500"></canvas>
   <img
-    src="assets/blabbs.png"
+    src="assets/blabbs-silent.svg"
     alt="Blabbs"
     class="blabbs"
     [class.jump]="isJumping"
@@ -25,4 +25,5 @@
   <small *ngIf="vocalLevel === 'silent'" style="color: grey"
     >❌ Aucun son détecté</small
   >
+  <small *ngIf="currentVolume > 0.8" style="color: red">⚠️ Volume élevé</small>
 </div>
