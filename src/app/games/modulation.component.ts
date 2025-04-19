@@ -22,6 +22,7 @@ export class ModulationComponent implements OnInit {
   whisperMax = 0.05;
   normalMax = 0.15;
   segments: { type: 'normal' | 'whisper' | 'shout'; x: number }[] = [];
+  segmentWidth = 50;
   scrollSpeed = 2;
   scrollLocked = false;
 
@@ -36,6 +37,8 @@ export class ModulationComponent implements OnInit {
 
   rmsHistory: number[] = [];
 
+  score = 0;
+
   ngOnInit(): void {
     this.generateSegments();
     this.startMicrophone();
@@ -45,8 +48,24 @@ export class ModulationComponent implements OnInit {
   generateSegments() {
     const types = ['normal', 'whisper', 'shout'] as const;
     for (let i = 0; i < 30; i++) {
-      const type = types[Math.floor(Math.random() * types.length)];
-      this.segments.push({ type, x: i * 200 });
+      // 70% normal, 25% whisper, 5% shout
+      const rand = Math.random();
+      var segmentCount = Math.floor(Math.random() * 5) + 1;
+      let type: (typeof types)[number];
+      if (rand < 0.4) {
+        type = 'normal';
+      } else if (rand < 0.8) {
+        type = 'whisper';
+      } else {
+        type = 'shout';
+        segmentCount = 1;
+      }
+      while (segmentCount > 0 && i < 30) {
+        this.segments.push({ type, x: i * this.segmentWidth });
+        segmentCount--;
+        i++;
+      }
+      i--;
     }
   }
 
@@ -105,12 +124,20 @@ export class ModulationComponent implements OnInit {
       segment.x -= this.scrollSpeed;
     }
     // Recycle segments
-    if (this.segments[0].x < -200) {
+    if (this.segments[0].x < -this.segmentWidth) {
       this.segments.shift();
       const lastX = this.segments[this.segments.length - 1].x;
-      const types = ['normal', 'whisper', 'shout'] as const;
-      const newType = types[Math.floor(Math.random() * types.length)];
-      this.segments.push({ type: newType, x: lastX + 200 });
+      // 70% normal, 25% whisper, 5% shout
+      const rand = Math.random();
+      let newType: 'normal' | 'whisper' | 'shout';
+      if (rand < 0.7) {
+        newType = 'normal';
+      } else if (rand < 0.95) {
+        newType = 'whisper';
+      } else {
+        newType = 'shout';
+      }
+      this.segments.push({ type: newType, x: lastX + this.segmentWidth });
     }
     requestAnimationFrame(() => this.scrollLoop());
   }

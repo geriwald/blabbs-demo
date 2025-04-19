@@ -1,64 +1,76 @@
-<div class="game-container">
-  <div class="road">
-    <img
-      *ngFor="let segment of segments"
-      class="road-segment"
-      [src]="getRoadSegmentSrc(segment.type)"
-      [style.left.px]="segment.x"
-      alt="road segment"
-    />
+<!-- Layout: Score & Volume on top, Canvas centered, Debug below -->
+<div class="modulation-outer">
+  <div class="score-area">
+    <span>Score: {{ score || 0 }}</span>
   </div>
-  <img
-    class="blabbs"
-    [src]="getBlabbsSrc()"
-    [class.jumping]="isJumping"
-    alt="blabbs"
-  />
-</div>
-
-<div style="margin-bottom: 1rem">
-  <label> <input type="checkbox" [(ngModel)]="debugMode" /> Debug Mode </label>
-  <div *ngIf="debugMode" class="debug-controls">
-    <button
-      (mousedown)="setDebugLevel('whisper')"
-      (mouseup)="clearDebugLevel()"
-      (mouseleave)="clearDebugLevel()"
+  <div class="volume-debug">
+    <label
+      >🎙️ Volume actuel : {{ currentVolume * 100 | number : "1.1-1" }}%</label
     >
-      Whisper
-    </button>
-    <button
-      (mousedown)="setDebugLevel('normal')"
-      (mouseup)="clearDebugLevel()"
-      (mouseleave)="clearDebugLevel()"
+    <div class="volume-bar-container">
+      <div
+        class="volume-bar"
+        [style.width.%]="volumePercent"
+        [ngClass]="vocalLevel"
+      ></div>
+    </div>
+    <small *ngIf="vocalLevel !== 'silent'"
+      >Niveau détecté : {{ vocalLevel }}</small
     >
-      Normal
-    </button>
-    <button
-      (mousedown)="setDebugLevel('shout')"
-      (mouseup)="clearDebugLevel()"
-      (mouseleave)="clearDebugLevel()"
+    <small *ngIf="vocalLevel === 'silent'" style="color: grey"
+      >❌ Aucun son détecté</small
     >
-      Shout
-    </button>
+    <small *ngIf="currentVolume > 0.8" style="color: red"
+      >⚠️ Volume élevé</small
+    >
   </div>
-</div>
-
-<div class="volume-debug">
-  <label
-    >🎙️ Volume actuel : {{ currentVolume * 100 | number : "1.1-1" }}%</label
-  >
-  <div class="volume-bar-container">
-    <div
-      class="volume-bar"
-      [style.width.%]="volumePercent"
-      [ngClass]="vocalLevel"
-    ></div>
+  <div class="game-center">
+    <div class="game-container">
+      <div class="road">
+        <img
+          *ngFor="let segment of segments"
+          class="road-segment"
+          [src]="getRoadSegmentSrc(segment.type)"
+          [style.left.px]="segment.x"
+          alt="road segment"
+        />
+      </div>
+      <img
+        class="blabbs"
+        [src]="getBlabbsSrc()"
+        [class.jumping]="isJumping"
+        alt="blabbs"
+      />
+    </div>
+    <div class="debug-controls-outer">
+      <div style="margin-bottom: 1rem">
+        <label>
+          <input type="checkbox" [(ngModel)]="debugMode" /> Debug Mode
+        </label>
+        <div *ngIf="debugMode" class="debug-controls">
+          <button
+            (mousedown)="setDebugLevel('whisper')"
+            (mouseup)="clearDebugLevel()"
+            (mouseleave)="clearDebugLevel()"
+          >
+            Whisper
+          </button>
+          <button
+            (mousedown)="setDebugLevel('normal')"
+            (mouseup)="clearDebugLevel()"
+            (mouseleave)="clearDebugLevel()"
+          >
+            Normal
+          </button>
+          <button
+            (mousedown)="setDebugLevel('shout')"
+            (mouseup)="clearDebugLevel()"
+            (mouseleave)="clearDebugLevel()"
+          >
+            Jump
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-  <small *ngIf="vocalLevel !== 'silent'"
-    >Niveau détecté : {{ vocalLevel }}</small
-  >
-  <small *ngIf="vocalLevel === 'silent'" style="color: grey"
-    >❌ Aucun son détecté</small
-  >
-  <small *ngIf="currentVolume > 0.8" style="color: red">⚠️ Volume élevé</small>
 </div>
