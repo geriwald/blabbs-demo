@@ -23,79 +23,89 @@ export class ModulationComponent implements OnInit {
   normalMax = 0.15;
   segments: { type: 'normal' | 'whisper' | 'shout'; x: number }[] = [];
   scrollSpeed = 2;
+  scrollLocked = false;
 
   audioContext!: AudioContext;
   analyser!: AnalyserNode;
   dataArray!: Float32Array;
 
-  images = {
-    normal: new Image(),
-    whisper: new Image(),
-    shout: new Image(),
-  };
+  blabbsState: 'silent' | 'jump' | 'fall' | 'normal' = 'silent';
+
+  debugMode = false;
+  debugLevel: 'whisper' | 'normal' | 'shout' | null = null;
+
+  rmsHistory: number[] = [];
 
   ngOnInit(): void {
-    this.initCanvas();
+    this.generateSegments();
     this.startMicrophone();
-  }
-
-  initCanvas() {
-    const canvas = this.canvasRef.nativeElement;
-    const ctx = canvas.getContext('2d')!;
-    ctx.fillStyle = '#aaa';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    this.images.normal.src = 'assets/road-normal.svg';
-    this.images.whisper.src = 'assets/road-whisper.svg';
-    this.images.shout.src = 'assets/road-jump.svg';
-
-    Promise.all([
-      this.imageLoaded(this.images.normal),
-      this.imageLoaded(this.images.whisper),
-      this.imageLoaded(this.images.shout),
-    ]).then(() => {
-      this.generateSegments();
-      this.loop();
-    });
-  }
-
-  imageLoaded(img: HTMLImageElement): Promise<void> {
-    return new Promise((resolve) => {
-      img.complete ? resolve() : (img.onload = () => resolve());
-    });
+    this.scrollLoop();
   }
 
   generateSegments() {
     const types = ['normal', 'whisper', 'shout'] as const;
     for (let i = 0; i < 30; i++) {
-      const type = types[Math.floor(Math.random() * types.length)];
+      // const type = types[Math.floor(Math.random() * types.length)];
+      const type = types[2];
       this.segments.push({ type, x: i * 200 });
     }
   }
 
-  loop() {
-    const canvas = this.canvasRef.nativeElement;
-    const ctx = canvas.getContext('2d')!;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const h = canvas.height;
-
-    for (const segment of this.segments) {
-      const img = this.images[segment.type];
-      ctx.drawImage(img, segment.x, h - 400, 200, 400);
-
-      // Draw a red border around the segment for debugging
-      ctx.strokeStyle = 'red';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(segment.x, h - 400, 200, 400);
+  getBlabbsSrc() {
+    // During jump/fall, lock to jump/fall images
+    if (this.blabbsState === 'jump') {
+      return 'assets/blabbs-jump.svg';
     }
+    if (this.blabbsState === 'fall') {
+      return 'assets/blabbs-fall.svg';
+    }
+    switch (this.vocalLevel) {
+      case 'silent':
+        return 'assets/blabbs-silent.svg';
+      case 'whisper':
+        return 'assets/blabbs-whisper.svg';
+      case 'normal':
+        return 'assets/blabbs-normal.svg';
+      case 'shout':
+        return 'assets/blabbs-jump.svg';
+      default:
+        return 'assets/blabbs-normal.svg';
+    }
+  }
 
-    // mise à jour de position
+  getRoadSegmentSrc(type: 'normal' | 'whisper' | 'shout') {
+    switch (type) {
+      case 'normal':
+        return 'assets/road-normal.svg';
+      case 'whisper':
+        return 'assets/road-whisper.svg';
+      case 'shout':
+        return 'assets/road-jump.svg';
+    }
+  }
+
+  scrollLoop() {
+    // Set scrollSpeed based on vocalLevel, unless scroll is locked
+    if (this.isJumping) {
+      this.scrollSpeed = 4;
+    } else {
+      switch (this.vocalLevel) {
+        case 'silent':
+          this.scrollSpeed = 0;
+          break;
+        case 'whisper':
+          this.scrollSpeed = 2;
+          break;
+        case 'normal':
+        case 'shout':
+          this.scrollSpeed = 4;
+          break;
+      }
+    }
     for (const segment of this.segments) {
       segment.x -= this.scrollSpeed;
     }
-
-    // recycle les segments
+    // Recycle segments
     if (this.segments[0].x < -200) {
       this.segments.shift();
       const lastX = this.segments[this.segments.length - 1].x;
@@ -103,8 +113,7 @@ export class ModulationComponent implements OnInit {
       const newType = types[Math.floor(Math.random() * types.length)];
       this.segments.push({ type: newType, x: lastX + 200 });
     }
-
-    requestAnimationFrame(() => this.loop());
+    requestAnimationFrame(() => this.scrollLoop());
   }
 
   startMicrophone() {
@@ -120,47 +129,82 @@ export class ModulationComponent implements OnInit {
   }
 
   analyseAudio() {
-    this.analyser.getFloatTimeDomainData(this.dataArray);
+    let rms: number;
+    if (this.debugMode && this.debugLevel) {
+      // Use debug level instead of microphone
+      switch (this.debugLevel) {
+        case 'whisper':
+          rms = this.whisperMax;
+          break;
+        case 'normal':
+          rms = this.normalMax;
+          break;
+        case 'shout':
+          rms = 1;
+          break;
+        default:
+          rms = 0;
+      }
+    } else {
+      this.analyser.getFloatTimeDomainData(this.dataArray);
+      rms = Math.sqrt(
+        this.dataArray.reduce((acc, val) => acc + val * val, 0) /
+          this.dataArray.length
+      );
+    }
 
-    const rms = Math.sqrt(
-      this.dataArray.reduce((acc, val) => acc + val * val, 0) /
-        this.dataArray.length
-    );
-    this.currentVolume = rms;
-    this.volumePercent = Math.min(rms * 300, 100);
+    // Moving average
+    if (!this.rmsHistory) this.rmsHistory = [];
+    this.rmsHistory.push(rms);
+    if (this.rmsHistory.length > 10) this.rmsHistory.shift();
+    const avgRms =
+      this.rmsHistory.reduce((a, b) => a + b, 0) / this.rmsHistory.length;
+    this.currentVolume = avgRms;
+    this.volumePercent = Math.min(avgRms * 300, 100);
 
-    if (rms < this.minVoice) {
+    if (avgRms < this.minVoice) {
       this.vocalLevel = 'silent';
-    } else if (rms < this.whisperMax) {
+    } else if (avgRms < this.whisperMax) {
       this.vocalLevel = 'whisper';
-    } else if (rms < this.normalMax) {
+    } else if (avgRms < this.normalMax) {
       this.vocalLevel = 'normal';
     } else {
       this.vocalLevel = 'shout';
       this.triggerJump();
     }
-
     requestAnimationFrame(() => this.analyseAudio());
   }
 
   triggerJump() {
     if (this.isJumping) return;
-
     this.isJumping = true;
-    const blabbsElement = document.querySelector('.blabbs') as HTMLElement;
-
-    // Use blabbs-jumping image during the ascent
-    blabbsElement.style.backgroundImage = "url('assets/blabbs-jump.svg')";
-
+    const prevBlabbsState = this.blabbsState;
+    const prevVocalLevel = this.vocalLevel;
+    this.vocalLevel = 'shout';
+    // Lock blabbs image to jump for first half, fall for second half
+    this.blabbsState = 'jump';
     setTimeout(() => {
-      // Use blabbs-running image during the descent
-      blabbsElement.style.backgroundImage = "url('assets/blabbs-fall.svg')";
-    }, 300); // Halfway through the jump
-
+      this.blabbsState = 'fall';
+    }, 400); // half of 0.8s
     setTimeout(() => {
-      // Reset to the default image after the jump
-      blabbsElement.style.backgroundImage = "url('assets/blabbs-normal.svg')";
       this.isJumping = false;
-    }, 600);
+      this.scrollLocked = false;
+      this.blabbsState = prevBlabbsState;
+      // Restore vocalLevel if not in debug mode
+      if (!this.debugMode) {
+        this.vocalLevel = prevVocalLevel;
+      }
+    }, 800);
+  }
+
+  setDebugLevel(level: 'whisper' | 'normal' | 'shout') {
+    this.debugLevel = level;
+    if (level === 'shout') {
+      this.triggerJump();
+    }
+  }
+
+  clearDebugLevel() {
+    this.debugLevel = null;
   }
 }

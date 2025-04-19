@@ -1,13 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Generator: Adobe Illustrator 27.8.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 100 200" style="enable-background:new 0 0 100 200;" xml:space="preserve">
-<style type="text/css">
+
+<svg
+   version="1.1"
+   id="Calque_1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 100 200"
+   style="enable-background:new 0 0 100 200;"
+   xml:space="preserve"
+   sodipodi:docname="road-whisper.svg"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs1" /><sodipodi:namedview
+   id="namedview1"
+   pagecolor="#ffffff"
+   bordercolor="#000000"
+   borderopacity="0.25"
+   inkscape:showpageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1"
+   inkscape:zoom="4.035"
+   inkscape:cx="49.938042"
+   inkscape:cy="100"
+   inkscape:window-width="1920"
+   inkscape:window-height="1009"
+   inkscape:window-x="-8"
+   inkscape:window-y="-8"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Calque_1" />
+<style
+   type="text/css"
+   id="style1">
 	.st0{fill:none;stroke:#FFFFFF;stroke-width:1.5;stroke-linejoin:round;stroke-miterlimit:10;}
 </style>
-<path class="st0" d="M100,100h-2c-0.8,0-1.5-0.1-2,0.4c-1.2,1.2-3,1.6-3.8,0.2l-1.1-2c-1-1.7-3.5-1.7-4.5,0l-1.1,2
-	c-1,1.7-3.5,1.7-4.5,0l-1.1-2c-1-1.7-3.5-1.7-4.5,0l-1.1,2c-1,1.7-3.5,1.7-4.5,0l-1.1-2c-1-1.7-3.5-1.7-4.5,0l-1.1,2
-	c-1,1.7-3.5,1.7-4.5,0l-1.1-2c-1-1.7-3.5-1.7-4.5,0l-1.1,2c-1,1.7-3.5,1.7-4.5,0l-1.1-2c-1-1.7-3.5-1.7-4.5,0l-1.1,2
-	c-1,1.7-3.5,1.7-4.5,0l-1.1-2c-1-1.7-3.5-1.7-4.5,0l-1.1,2c-1,1.7-3.5,1.7-4.5,0l-1.1-2c-1-1.7-3.5-1.7-4.5,0l-1.1,2
-	c-1,1.7-3.5,1.7-4.5,0l-1.1-2c-1-1.7-3.5-1.7-4.5,0l-1.1,2c-0.8,1.4-2.6,1-3.8-0.2c-0.5-0.5-1.3-0.4-2-0.4H0"/>
+<path
+   class="st0"
+   d="m 106.69145,100 h -2.25279 c -0.90111,0 -1.68959,-0.1 -2.25279,0.4 -1.35167,1.2 -3.379179,1.6 -4.280294,0.2 l -1.239033,-2 c -1.126395,-1.7 -3.942379,-1.7 -5.068773,0 l -1.239034,2 c -1.126394,1.7 -3.942379,1.7 -5.068774,0 l -1.239033,-2 c -1.126394,-1.7 -3.942378,-1.7 -5.068773,0 l -1.239034,2 c -1.126393,1.7 -3.942379,1.7 -5.068773,0 l -1.239033,-2 c -1.126395,-1.7 -3.942379,-1.7 -5.068773,0 l -1.239034,2 c -1.126394,1.7 -3.942379,1.7 -5.068773,0 l -1.239033,-2 c -1.126395,-1.7 -3.942379,-1.7 -5.068774,0 l -1.239034,2 c -1.126393,1.7 -3.942378,1.7 -5.068773,0 l -1.239033,-2 c -1.126394,-1.7 -3.942378,-1.7 -5.068773,0 l -1.239034,2 c -1.126393,1.7 -3.942379,1.7 -5.068773,0 l -1.239033,-2 c -1.126395,-1.7 -3.942379,-1.7 -5.068773,0 l -1.239034,2 c -1.126394,1.7 -3.942379,1.7 -5.068774,0 l -1.239032,-2 c -1.126395,-1.7 -3.942379,-1.7 -5.068774,0 l -1.239034,2 c -1.126393,1.7 -3.942378,1.7 -5.0687724,0 l -1.2390336,-2 c -1.126394,-1.7 -3.9423791,-1.7 -5.0687731,0 l -1.2390336,2 c -0.9011152,1.4 -2.92862446,1 -4.2802974,-0.2 C -2.794052,99.9 -3.6951673,100 -4.4836432,100 h -1.4643122"
+   id="path1" />
 </svg>

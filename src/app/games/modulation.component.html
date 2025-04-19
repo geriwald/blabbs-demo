@@ -1,11 +1,46 @@
 <div class="game-container">
-  <canvas #gameCanvas width="500" height="500"></canvas>
+  <div class="road">
+    <img
+      *ngFor="let segment of segments"
+      class="road-segment"
+      [src]="getRoadSegmentSrc(segment.type)"
+      [style.left.px]="segment.x"
+      alt="road segment"
+    />
+  </div>
   <img
-    src="assets/blabbs-silent.svg"
-    alt="Blabbs"
     class="blabbs"
-    [class.jump]="isJumping"
+    [src]="getBlabbsSrc()"
+    [class.jumping]="isJumping"
+    alt="blabbs"
   />
+</div>
+
+<div style="margin-bottom: 1rem">
+  <label> <input type="checkbox" [(ngModel)]="debugMode" /> Debug Mode </label>
+  <div *ngIf="debugMode" class="debug-controls">
+    <button
+      (mousedown)="setDebugLevel('whisper')"
+      (mouseup)="clearDebugLevel()"
+      (mouseleave)="clearDebugLevel()"
+    >
+      Whisper
+    </button>
+    <button
+      (mousedown)="setDebugLevel('normal')"
+      (mouseup)="clearDebugLevel()"
+      (mouseleave)="clearDebugLevel()"
+    >
+      Normal
+    </button>
+    <button
+      (mousedown)="setDebugLevel('shout')"
+      (mouseup)="clearDebugLevel()"
+      (mouseleave)="clearDebugLevel()"
+    >
+      Shout
+    </button>
+  </div>
 </div>
 
 <div class="volume-debug">
