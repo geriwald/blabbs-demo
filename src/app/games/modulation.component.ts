@@ -45,8 +45,7 @@ export class ModulationComponent implements OnInit {
   generateSegments() {
     const types = ['normal', 'whisper', 'shout'] as const;
     for (let i = 0; i < 30; i++) {
-      // const type = types[Math.floor(Math.random() * types.length)];
-      const type = types[2];
+      const type = types[Math.floor(Math.random() * types.length)];
       this.segments.push({ type, x: i * 200 });
     }
   }
